@@ -9,7 +9,6 @@
             "email": "longmsdu@163.com"
         }
     ],
-    "minimum-stability": "beta",
     "require": {},
     "autoload": {
       "psr-4": {
