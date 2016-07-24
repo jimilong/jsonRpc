@@ -15,10 +15,6 @@
         "Rpc\\": "src/"
       }
     },
-    "repositories": {
-      "packagist": {
-        "type": "composer",
-        "url": "https://packagist.phpcomposer.com"
-      }
-    }
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
