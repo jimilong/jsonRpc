@@ -1,5 +1,7 @@
 <?php
 
+namespace Rpc;
+
 class jsonRPCServer {
 
     /*

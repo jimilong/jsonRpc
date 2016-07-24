@@ -1,0 +1,25 @@
+{
+    "name": "longmsdu/rpc",
+    "description": "simple rpc base on http",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "longmsdu",
+            "email": "longmsdu@163.com"
+        }
+    ],
+    "minimum-stability": "beta",
+    "require": {},
+    "autoload": {
+      "psr-4": {
+        "Rpc\\": "src/"
+      }
+    },
+    "repositories": {
+      "packagist": {
+        "type": "composer",
+        "url": "https://packagist.phpcomposer.com"
+      }
+    }
+}

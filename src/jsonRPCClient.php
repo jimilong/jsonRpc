@@ -1,4 +1,7 @@
 <?php
+
+namespace Rpc;
+
 class jsonRPCClient {
     /* 
      * Debug state
