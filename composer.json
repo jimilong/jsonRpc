@@ -1,5 +1,5 @@
 {
-    "name": "longmsdu/rpc",
+    "name": "longmsdu/jsonRpc",
     "description": "simple rpc base on http",
     "type": "library",
     "license": "MIT",
