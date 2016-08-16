@@ -23,7 +23,7 @@ class jsonRPCClient {
      * @var Boolean
      */
     private $notification = false;
-    /* 
+    /*
      *  Constructor of class
      *  Takes the connection parameters
      *
@@ -34,104 +34,110 @@ class jsonRPCClient {
         $this->uri = $uri;
         empty($proxy) ? $this->proxy = '' : $this->proxy = $proxy;
         empty($debug) ? $this->debug = false : $this->debug = true;
-        $this->debugclone = $debug;        
+        $this->debugclone = $debug;
     }
 
     /*
      * Performs a jsonRPCRequest and gets the results as an array;
-     * 
-     * @param $method (String) 
+     *
+     * @param $method (String)
      * @param $params (Array)
      * @return Array
      */
-    public function __call($method, $params) {
+    public function request($class, $method, $params) {
 
-         /* finds whether $method is a scalar or not */
-         if(!is_scalar($method)) {
-            throw new Exception("Method name has no scalar value.");   
-         }
+        /* finds whether $method is a scalar or not */
+        if(!is_scalar($class)) {
+            throw new \Exception("Class name has no scalar value.");
+        }
 
-         /* checks if the $params is vector or not */
-         if(is_array($params)) {
+        /* finds whether $method is a scalar or not */
+        if(!is_scalar($method)) {
+            throw new \Exception("Method name has no scalar value.");
+        }
+
+        /* checks if the $params is vector or not */
+        if(is_array($params)) {
             $params = array_values($params);
-         } else {
-            throw new Exception("Params must be given as array.");
-         }
+        } else {
+            throw new \Exception("Params must be given as array.");
+        }
 
-         $this->id = rand(0,99999); 
+        $this->id = rand(0,99999);
 
-         if($this->notification) {
-           $currentId = NULL; 
-         } else {
-           $currentId = $this->id;
-         }
+        if($this->notification) {
+            $currentId = NULL;
+        } else {
+            $currentId = $this->id;
+        }
 
-         /* prepares the request */
-         $request = array(
-                          'method' => $method,
-                          'params' => $params,
-                          'id' => $currentId
-                         );
+        /* prepares the request */
+        $request = array(
+            'class'  => $class,
+            'method' => $method,
+            'params' => $params,
+            'id' => $currentId
+        );
 
-         $request = json_encode($request);
+        $request = json_encode($request);
 
-         $this->debug && $this->debug .= "\n".'**** Client Request ******'."\n".$request."\n".'**** End of Client Request *****'."\n";
+        $this->debug && $this->debug .= "\n".'**** Client Request ******'."\n".$request."\n".'**** End of Client Request *****'."\n";
 
-         /* Performs the HTTP POST */
-         $opts = array('http' => array(
-                                       'method' => 'POST',
-                                       'header' => 'Content-type: application/json',
-                                       'content' => $request
-                                       )); 
+        /* Performs the HTTP POST */
+        $opts = array('http' => array(
+            'method' => 'POST',
+            'header' => 'Content-type: application/json',
+            'content' => $request
+        ));
 
-         $context = stream_context_create($opts);
+        $context = stream_context_create($opts);
 
-         if($fp = fopen($this->uri, 'r', false, $context)) {
+        if($fp = fopen($this->uri, 'r', false, $context)) {
 
             $response = '';
 
             while($row=fgets($fp)) {
 
-                $response .= trim($row)."\n"; 
-            } 
+                $response .= trim($row)."\n";
+            }
 
             $this->debug && $this->debug .= '**** Server response ****'."\n".$response."\n".'**** End of server response *****'."\n\n";
 
             $response = json_decode($response, true);
-             
-         } else {
 
-           throw new Exception('Unable to connect to'. $this->uri);
-         } 
-         
-         /*
-          * inserts HTML line breaks before all newlines in a string
-          * @param $debug (String) 
-          * @return String returns string with '<br/>' or '<br>' inserted before al newlines.
-          */
-         if($this->debug) {
+        } else {
+
+            throw new \Exception('Unable to connect to'. $this->uri);
+        }
+
+        /*
+         * inserts HTML line breaks before all newlines in a string
+         * @param $debug (String)
+         * @return String returns string with '<br/>' or '<br>' inserted before al newlines.
+         */
+        if($this->debug) {
             echo nl2br($this->debug);
-         }
+        }
 
-         /* Final checks and return */
-         if(!$this->notification) {
+        /* Final checks and return */
+        if(!$this->notification) {
 
-           if($response['id'] != $currentId) {
-               throw new Exception('Incorrect response ID (request ID: '. $currentId . ', response ID: '. $response['id'].')');
-           }
+            if($response['id'] != $currentId) {
+                throw new \Exception('Incorrect response ID (request ID: '. $currentId . ', response ID: '. $response['id'].')');
+            }
 
-           if(!is_null($response['error'])) {
-               throw new Exception('Request error: '. $response['error']);     
-           }   
+            if(!is_null($response['error'])) {
+                throw new \Exception('Request error: '. $response['error']);
+            }
 
-           $this->debug = $this->debugclone;
-          
-           return $response['result'];
+            $this->debug = $this->debugclone;
 
-         } else {
+            return $response['result'];
 
-           return true;
-         }
+        } else {
+
+            return true;
+        }
     }
 
     /* 
@@ -143,9 +149,9 @@ class jsonRPCClient {
      * @param $notification (Boolean)
      * @return true;
      */
-      public function setRPCNotification($notification) {
-             empty($notification) ? $this->notification = false : $this->notification = true;
-         return true;  
-      } 
+    public function setRPCNotification($notification) {
+        empty($notification) ? $this->notification = false : $this->notification = true;
+        return true;
+    }
 
 }
